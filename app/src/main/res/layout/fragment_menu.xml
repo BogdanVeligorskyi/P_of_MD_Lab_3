@@ -1,6 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<TableLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:padding="@dimen/screenPadding">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <include layout="@layout/part_logo" />
+
+    <TableRow
+        android:gravity="center_horizontal">
+        <TextView
+            android:id="@+id/main_menu"
+            style="@style/ScreenTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/menu" />
+    </TableRow>
+
+    <View
+        android:layout_height="75dp"/>
+
+    <TableRow
+        android:gravity="center_horizontal">
+        <Button
+            android:id="@+id/start_button"
+            style="@style/MenuButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/start" />
+    </TableRow>
+
+    <TableRow
+        android:gravity="center_horizontal">
+        <Button
+            android:id="@+id/options_button"
+            style="@style/MenuButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/options" />
+    </TableRow>
+
+    <TableRow
+        android:gravity="center_horizontal">
+        <Button
+            android:id="@+id/quit_button"
+            style="@style/MenuButton"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/exit" />
+    </TableRow>
+
+</TableLayout>
