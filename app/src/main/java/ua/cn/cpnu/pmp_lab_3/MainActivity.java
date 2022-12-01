@@ -3,7 +3,6 @@ package ua.cn.cpnu.pmp_lab_3;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import android.content.Intent;
 import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -33,23 +32,23 @@ import ua.cn.cpnu.pmp_lab_3.model.Questions;
 // class for MainActivity
 public class MainActivity extends AppCompatActivity implements AppContract {
 
+    // fields, used in this class
     public static final String TAG = MainActivity.class.getSimpleName();
-    private Map<String, List<ListenerInfo<?>>> listeners = new HashMap<>();
     public static final String FILENAME = "questions.txt";
-
-    private ExecutorService executorService;
-    private Handler handler = new Handler();
+    private Map<String, List<ListenerInfo<?>>> listeners = new HashMap<>();
+    private final Handler handler = new Handler();
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState){
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         if (savedInstanceState == null) {
             launchFragment(null, new MenuFragment());
-            executorService = Executors.newSingleThreadExecutor();
+            // create dedicated thread for loading questions from .txt file
+            ExecutorService executorService = Executors.newSingleThreadExecutor();
             executorService.submit(() -> {
                 try {
-                    loadQuestions(FILENAME);
+                    loadQuestions();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -58,9 +57,9 @@ public class MainActivity extends AppCompatActivity implements AppContract {
     }
 
     // load questions, answers and possible variants from file
-    private void loadQuestions(String filename)throws IOException {
+    private void loadQuestions() throws IOException {
         AssetManager am = getAssets();
-        InputStream is = am.open(filename);
+        InputStream is = am.open(MainActivity.FILENAME);
         Questions[] arrQuestions = new Questions[10];
         Log.e("TAG", "im in condition");
         BufferedReader reader = new BufferedReader
@@ -79,17 +78,15 @@ public class MainActivity extends AppCompatActivity implements AppContract {
             arrQuestions[i].variants_arr[2] = variants[2];
             arrQuestions[i].variants_arr[3] = variants[3];
         }
-            handler.post(() -> {
-                MenuFragment.arrQuestions = arrQuestions;
-            });
-
-}
-
+        // transfer loaded questions to MenuFragment component
+        handler.post(() -> MenuFragment.arrQuestions = arrQuestions);
+    }
 
     @Override
     public void toOptionsScreen(Fragment target, Options options) {
         launchFragment(target, OptionsFragment.newInstance(options));
     }
+
     @Override
     public void toPlayScreen(Fragment target, Options options, Questions[] questions) {
         if (options == null) {
@@ -122,6 +119,7 @@ public class MainActivity extends AppCompatActivity implements AppContract {
             getSupportFragmentManager().popBackStack();
         }
     }
+
     @Override
     public <T> void publish(T results) {
         Fragment currentFragment = getCurrentFragment();
@@ -149,6 +147,7 @@ public class MainActivity extends AppCompatActivity implements AppContract {
                     !it.next().tryPublish(results));
         }
     }
+
     @Override
     public <T> void registerListener(Fragment fragment,
                                      Class<T> clazz,

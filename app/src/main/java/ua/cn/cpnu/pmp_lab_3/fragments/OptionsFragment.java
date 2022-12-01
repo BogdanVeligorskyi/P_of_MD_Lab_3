@@ -17,6 +17,7 @@ import ua.cn.cpnu.pmp_lab_3.model.Options;
 // options fragment class
 public class OptionsFragment extends BaseFragment {
 
+    // keys and fields
     private static final String ARG_OPTIONS = "OPTIONS";
     private static final String KEY_QUESTIONS = "QUESTIONS";
     private static final String KEY_HINT = "HINT";
@@ -42,8 +43,6 @@ public class OptionsFragment extends BaseFragment {
                 container, false);
     }
 
-
-
     @Override
     public void onViewCreated(@NonNull View view,
                               @Nullable Bundle savedInstanceState) {
@@ -54,14 +53,13 @@ public class OptionsFragment extends BaseFragment {
                 .findViewById(R.id.hint_availability);
         setupButtons(view);
         int selectedNum = 0;
-        boolean isHint = false;
+        //boolean isHint = false;
 
         if (savedInstanceState != null) {
             // so need to restore only Spinner data
             selectedNum = savedInstanceState
                     .getInt(KEY_QUESTIONS);
-            isHint = savedInstanceState.getBoolean(KEY_HINT);
-
+            savedInstanceState.getBoolean(KEY_HINT);
         } else {
             Options options = getOptionsArg();
             if (options != null) {
@@ -72,6 +70,7 @@ public class OptionsFragment extends BaseFragment {
         setupQuestionsNumSpinner(String.valueOf(selectedNum));
     }
 
+    // setup "Cancel" and "Ok" buttons in OptionsFragment
     private void setupButtons(View view) {
         view.findViewById(R.id.cancel)
                 .setOnClickListener(v -> getAppContract().cancel());
@@ -86,6 +85,7 @@ public class OptionsFragment extends BaseFragment {
                 });
     }
 
+    // setup spinner according to chosen number of questions
     private void setupQuestionsNumSpinner(
             @Nullable String selectedNum) {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
@@ -102,6 +102,7 @@ public class OptionsFragment extends BaseFragment {
         }
     }
 
+    // get pre-defined options
     private Options getOptionsArg() {
         assert getArguments() != null;
         return getArguments().getParcelable(ARG_OPTIONS);

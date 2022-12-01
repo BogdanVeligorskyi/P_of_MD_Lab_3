@@ -69,6 +69,7 @@ public class PlayFragment extends BaseFragment {
             is_recently_checked_checkbox = savedInstanceState.getBoolean("IS_RECENTLY_CHECKED_CHECKBOX");
             arrQuestions = (Questions[]) savedInstanceState.getParcelableArray("QUESTIONS");
             // if you pressed "Start" in main menu - read options first
+            // and shuffle all questions
         } else {
             options = getOptions();
             current_question_num = 1;
@@ -92,10 +93,6 @@ public class PlayFragment extends BaseFragment {
         // if you pressed button_4 - check it
         view.findViewById(R.id.button_4).setOnClickListener(button -> checkAnswer(view,3));
 
-    }
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
     }
 
     // dialog which is opened after clicking to 'Exit | Take the winnings' button
@@ -187,7 +184,6 @@ public class PlayFragment extends BaseFragment {
     private void setupCheckBox(View view) {
         CheckBox cb = view.findViewById(R.id.is_hint);
         cb.setEnabled(options.getIs_hint_available() && !is_clicked_checkbox);
-
         cb.setOnClickListener(v -> {
             if (((CheckBox) v).isChecked()) {
                 removeIncorrectAnswers(view, cb);
@@ -275,8 +271,14 @@ public class PlayFragment extends BaseFragment {
         outState.putParcelableArray("QUESTIONS", arrQuestions);
     }
 
+    // read options from OptionsFragment
     private Options getOptions() {
         assert getArguments() != null;
         return getArguments().getParcelable(EXTRA_OPTIONS);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
     }
 }
